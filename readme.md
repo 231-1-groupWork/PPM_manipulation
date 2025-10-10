@@ -104,7 +104,7 @@ typedef struct {
 - Definition de la structure du travail.
 - implementation du fichier **main.c**.
 - Implementation du modules  **imgage_ops**.
-- Ecriture du readme.
+
 
 ### MOAKO EKANGO BILL ARMEL :
 
