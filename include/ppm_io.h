@@ -8,7 +8,7 @@ typedef struct {
     int width;
     int height;
     int max_value;
-    unsigned char *data; // Tableau des pixels (R,G,B,R,G,B,...)
+    int *data; // Tableau des pixels (R,G,B,R,G,B,...)
 } Image;
 
 // Fonctions principales

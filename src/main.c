@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "../include/ppm_io.h"
 #include "../include/image_ops.h"
@@ -8,7 +9,7 @@
 
 int main() {
     Image *img = NULL;
-    char commande[128];
+    char commande[128]; 
 
     printf("Bienvenue dans PPM Viewer !\n");
     printf("Tapez 'help' pour voir la liste des commandes.\n");
@@ -50,23 +51,100 @@ int main() {
         }
 
         // ---- Commande: gris ----
-        else if (strcmp(commande, "gris") == 0) {
+        else if (strncmp(commande, "gris", 4) == 0) {
+            char filename[50];
+            sscanf(commande, "gris %s", filename);
+            if (img) free_image(img);
+            img = read_ppm(filename);
             if (!img) { printf("Aucune image chargée.\n"); continue; }
             to_gray(img);
             printf("Image convertie en niveaux de gris.\n");
         }
 
         // ---- Commande: negatif ----
-        else if (strcmp(commande, "negatif") == 0) {
+        else if (strncmp(commande, "negatif", 8) == 0) {
+            char filename[50];
+            sscanf(commande, "negatif %s", filename);
+            if (img) free_image(img);
+            img = read_ppm(filename);
             if (!img) { printf("Aucune image chargée.\n"); continue; }
             negatif(img);
             printf("Négatif appliqué.\n");
         }
 
         // ---- Commande: taille ----
-        else if (strcmp(commande, "taille") == 0) {
+        else if (strncmp(commande, "taille", 6) == 0) {
+            char filename[50];
+            sscanf(commande, "taille %s", filename);
+            if (img) free_image(img);
+            img = read_ppm(filename);
             if (!img) { printf("Aucune image chargée.\n"); continue; }
             print_size(img);
+        }
+
+        else if (strncmp(commande,"dom",3)==0){
+            //if (!img) { printf("Aucune image chargée.\n"); continue; }
+            char couleur;
+            int val;
+            char filname[50];
+            if (sscanf(commande, "dom %c %d %s", &couleur, &val, filname) == 3) {
+                img = read_ppm(filname);
+                if (!img) { printf("Aucune image chargée.\n"); continue; }
+                //val doit etre entre -
+                if (val < -255 || val > 255) {
+                    printf("Erreur : la valeur doit être entre -255 et 255.\n");
+                    continue;
+                }
+                couleur = toupper(couleur);
+                if (couleur != 'R' && couleur != 'G' && couleur != 'B') {
+                    printf("Erreur : la couleur doit être R, G ou B.\n");
+                    continue;
+                }
+                foncer_ou_eclaircir(img, couleur, val);
+                if (val > 0)
+                    printf("Image foncée sur la dominante %c de %d.\n", couleur, val);
+                else
+                    printf("Image éclaircie sur la dominante %c de %d.\n", couleur, -val);
+            } else {
+                printf("Usage: dom <R|G|B> <valeur entre -255 et 255>\n");
+            }
+        }  
+        
+        else if (strncmp(commande,"cut",3)==0){
+            //if (!img) { printf("Aucune image chargée.\n"); continue; }
+            int l1, l2, c1, c2;
+            char filname[50];
+            char store[50];
+            if (sscanf(commande, "cut %s %d %d %d %d %s", filname,&l1, &l2, &c1, &c2,store) == 6) {
+                img = read_ppm(filname);
+                if (!img) { printf("Aucune image chargée.\n"); continue; }
+                Image *new_img = decoupe(img, l1, l2, c1, c2);
+                if (new_img) {
+                    write_ppm(store, new_img);
+                    printf("Image découpée : nouvelle taille %d x %d.\n", new_img->width, new_img->height);
+                } else {
+                    printf("Erreur lors de la découpe de l'image.\n");
+                }
+            } else {
+                printf("Usage: cut <l1> <l2> <c1> <c2>\n");
+            }
+        }
+        // filtre median 
+
+        else if (strncmp(commande, "fil",3)==0) {
+            char filename[50];
+            char store[50];
+            if (sscanf(commande, "fil %s %s", filename, store) == 2) {
+                img = read_ppm(filename);
+                if (!img) { printf("Aucune image chargée.\n"); continue; }
+                median_filter(img);
+                write_ppm(store, img);
+                printf("Filtre médian appliqué et image sauvegardée sous '%s'.\n", store);
+            } else {
+                printf("Usage: fil <input_filename> <output_filename>\n");
+            }
+            median_filter(img);
+            printf("Filtre médian appliqué.\n");
         }
 
         else {
