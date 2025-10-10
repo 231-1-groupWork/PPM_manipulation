@@ -62,7 +62,7 @@ gcc -std=c11 -o ppmviewer ppmviewer.c
 
 ## 👨‍💻 Contribution personnelle – *TEUKEU FOMEKONG ISMAEL*  
   
-- 🖍️ Ecriture du programe principale(toutes les fonctionalites incluse).  
+- 🖍️ Ecriture du programe principale(toutes les fonctionalites incluse):ppmviewer.c.  
 
 ---
 
