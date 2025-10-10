@@ -1,1 +1,40 @@
+📄 Rapport personnel – Contribution au projet PPM Viewer
 
+🎯 Objectif
+Dans le cadre du projet PPM Viewer, j’ai développé le module ppm_io.c, chargé de la lecture et de l’écriture des fichiers PPM (Portable PixMap, version P3).
+Ce module constitue la base du système, car il permet de charger les images en mémoire et de sauvegarder les résultats des traitements.
+
+🧩 Rôle du module
+Lecture d’un fichier PPM : en-tête, gestion des commentaires, chargement des pixels (R,G,B).
+
+Écriture d’un fichier PPM valide à partir d’une structure interne Image.
+
+Vérification de la cohérence des données et gestion des erreurs (fichier introuvable, format invalide, valeurs hors bornes).
+
+🧱 Structure de données
+c
+typedef struct {
+    int width;
+    int height;
+    int max_value;
+    unsigned char *data; // Pixels stockés séquentiellement : RGBRGB...
+} Image;
+💻 Fonctions principales
+Image* read_ppm(const char *filename) : lit un fichier PPM et charge l’image en mémoire.
+
+int write_ppm(const char *filename, const Image *img) : écrit une image au format P3.
+
+🔗 Lien avec les commandes CLI
+Toutes les commandes (size, gris, neg, dom, cut, fil) reposent sur read_ppm pour charger l’image et write_ppm pour sauvegarder le résultat. 
+Ce module est donc indispensable à l’exécution correcte de l’application.
+
+👤 Contribution
+Conception et implémentation complète de ppm_io.c.
+
+Gestion des cas particuliers (commentaires, valeurs max ≠ 255, fichiers corrompus).
+
+Tests sur plusieurs images pour valider la robustesse.
+
+✅ Conclusion
+Le module ppm_io.c assure la fiabilité des entrées et sorties du projet PPM Viewer. 
+Il garantit que toutes les opérations de traitement d’image reposent sur une base solide et cohérente.
