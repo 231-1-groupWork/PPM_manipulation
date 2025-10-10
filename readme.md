@@ -125,5 +125,5 @@ typedef struct {
 
 ### ABENGA OGNA BERNADETTE : 
 
-- 
-
+- Ecriture du **readme**
+- participation a l'implementation du module **ppm_io.c**.
